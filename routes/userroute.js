@@ -6,25 +6,30 @@ const router = express.Router();
 
 const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
-
 router.post("/signup", async (req, res) => {
   const { name, email, password, type } = req.body;
   try {
+    // Check if the user already exists
+    const existingUser  = await User.findOne({ email });
+    if (existingUser ) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword, type });
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    const newUser  = new User({ name, email, password: hashedPassword, type });
+    await newUser .save();
+    res.status(201).json({ message: "User  registered successfully" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Signup error:", err); // Log the error
+    res.status(500).json({ message: "Server error" });
   }
 });
-
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    if (!user) return res.status(400).json({ message: "User  not found" });
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return res.status(400).json({ message: "Incorrect password" });

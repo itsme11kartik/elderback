@@ -3,16 +3,15 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
-const Chat = require("./models/chatmodel"); 
-
+const Chat = require("./models/chatmodel");
+const userRoutes = require("./routes/userroute");
 
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
 app.use(cors());
-const routes = require("./routes/userroute");
-app.use("/user",routes);
+app.use("/user", userRoutes);
 
 // Socket.io setup
 const io = new Server(server, {
@@ -22,12 +21,10 @@ const io = new Server(server, {
   },
 });
 
-
 mongoose
-  .connect("mongodb+srv://kartik:1234@cluster0.hra8h.mongodb.net/")
+  .connect("mongodb+srv://kartik:1234@cluster0.hra8h.mongodb.net/Elder")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
-
 
 // Socket.io event handlers
 io.on("connection", (socket) => {
