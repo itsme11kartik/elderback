@@ -24,7 +24,7 @@ const io = new Server(server, {
 
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Elder")
+  .connect("mongodb+srv://kartik:1234@cluster0.hra8h.mongodb.net/")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
