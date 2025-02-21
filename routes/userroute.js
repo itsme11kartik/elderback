@@ -41,27 +41,27 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Middleware to Verify JWT Token
-// const verifyToken = (req, res, next) => {
-//   const token = req.headers["authorization"];
-//   if (!token) return res.status(403).json({ message: "No token provided" });
 
-//   jwt.verify(token, SECRET_KEY, (err, decoded) => {
-//     if (err) return res.status(401).json({ message: "Unauthorized" });
-//     req.userId = decoded.id;
-//     req.userType = decoded.type;
-//     next();
-//   });
-// };
+const verifyToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(403).json({ message: "No token provided" });
 
-// Protected Route Example (Get User Data)
-// router.get("/", verifyToken, async (req, res) => {
-//   try {
-//     const users = await User.find();
-//     res.status(200).json(users);
-//   } catch (err) {
-//     res.status(404).json({ message: "No users found" });
-//   }
-// });
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) return res.status(401).json({ message: "Unauthorized" });
+    req.userId = decoded.id;
+    req.userType = decoded.type;
+    next();
+  });
+};
+
+
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(404).json({ message: "No users found" });
+  }
+});
 
 module.exports = router;
