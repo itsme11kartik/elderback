@@ -9,20 +9,20 @@ const userRoutes = require("./routes/userroute");
 const app = express();
 const server = http.createServer(app);
 
-// CORS configuration
+
 const corsOptions = {
-    origin: "http://localhost:5173", // Change this to your frontend URL when deployed
-    credentials: true, // Allow credentials
+    origin: "https://elderfront.onrender.com", 
+    credentials: true, 
 };
 
 app.use(express.json());
-app.use(cors(corsOptions)); // Use the CORS options
+app.use(cors(corsOptions)); 
 app.use("/user", userRoutes);
 
-// Socket.io setup
+
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Change this to your frontend URL when deployed
+        origin: "https://elderfront.onrender.com", 
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -33,22 +33,22 @@ mongoose
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.error("MongoDB connection error:", err));
 
-// Socket.io event handlers
+
 io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
 
-    // Fetch chat history when a user joins
+    
     socket.on("fetchMessages", async () => {
         const messages = await Chat.find().sort({ timestamp: 1 });
         socket.emit("loadMessages", messages);
     });
 
-    // Handle sending messages
+    
     socket.on("sendMessage", async (message) => {
         const newMessage = new Chat(message);
-        await newMessage.save(); // Save to database
+        await newMessage.save(); 
 
-        io.emit("receiveMessage", newMessage); // Broadcast to all users
+        io.emit("receiveMessage", newMessage); 
     });
 
     socket.on("disconnect", () => {
