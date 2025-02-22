@@ -41,6 +41,23 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/Elder", async(req,res) =>{
+  try{
+    const elders =await User.find({type:"Elder"});
+    res.status(200).json(elders);
+  }catch(err){
+    res.status(500).json({message:err.message});
+  }
+})
+
+router.get("/family", async(req,res) =>{
+  try{
+    const elders =await User.find({type:"Family"});
+    res.status(200).json(elders);
+  }catch(err){
+    res.status(500).json({message:err.message});
+  }
+})
 
 const verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
