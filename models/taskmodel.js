@@ -20,13 +20,20 @@ const taskSchema = new mongoose.Schema({
     required: true,
   },
   completionTime: {
-    type: String, 
+    type: Date, 
+    default: Date.now,
     required: true,
   },
   createdAt: {
     type: Date,
     default: Date.now, 
   },
+  status:{
+    type: String,
+    default:"Pending",
+    enum: ['Pending', 'Completed'],
+    required: true,
+  }
 });
 
 const Task = mongoose.model('Task', taskSchema);

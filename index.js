@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const Chat = require("./models/chatmodel");
 const userRoutes = require("./routes/userroute");
 const taskRoutes = require("./routes/taskroute");
+const postRoutes = require("./routes/postroute");
 
 const app = express();
 const server = http.createServer(app);
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cors(corsOptions)); 
 app.use("/user", userRoutes);
 app.use("/family-task",taskRoutes);
+app.use("/post", postRoutes);
 
 
 const io = new Server(server, {
